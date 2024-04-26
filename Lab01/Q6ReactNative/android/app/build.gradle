@@ -74,9 +74,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.q4reactnative"
+    namespace "com.q6reactnative"
     defaultConfig {
-        applicationId "com.q4reactnative"
+        applicationId "com.q6reactnative"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
