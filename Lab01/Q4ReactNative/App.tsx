@@ -3,7 +3,7 @@ import style from "./style";
 import Square from "./Square";
 import data from "./data";
 
-export default App=() => {
+export default function App() {
   return(
     <ScrollView style = {style.container}>
       {data.map((item, index) => (
