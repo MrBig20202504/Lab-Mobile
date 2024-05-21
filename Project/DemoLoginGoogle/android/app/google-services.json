@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "758775804161",
+    "project_id": "demologin-c7578",
+    "storage_bucket": "demologin-c7578.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758775804161:android:1ad10cc2bad938bce56b00",
+        "android_client_info": {
+          "package_name": "com.demologingoogle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758775804161-s6ionssqhnfjobicjdp93tasnccb4b6f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.demologingoogle",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "758775804161-4jmui97mki3gubon3gjjorn740g2c1hr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgd7_u8d1FSjoRsFxiww7dWy84G2j8yZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758775804161-4jmui97mki3gubon3gjjorn740g2c1hr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,7 +8,7 @@ import {
     TextStyle,
     ViewStyle,
 } from 'react-native';
-import styles from './styles';
+import styles from './Src/styles';
 const Header = () => {
     return (
             <Text style={styles.heading}>

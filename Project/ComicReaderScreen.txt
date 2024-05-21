@@ -1,0 +1,7 @@
+- Login Screen (with google) 
+- Home Screen, 
+- Bookmark Screen, 
+- Searching Screen, 
+- Update Screen, 
+- Profile Screen, 
+- Follow Screen.

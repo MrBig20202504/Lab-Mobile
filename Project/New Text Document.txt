@@ -1,8 +1,0 @@
-- Sign up, 
-- Login Screen, 
-- Home Screen, 
-- Bookmark Screen, 
-- Searching Screen, 
-- Update Screen, 
-- Profile Screen, 
-- Follow Screen.
