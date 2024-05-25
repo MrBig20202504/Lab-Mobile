@@ -1,25 +1,20 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import Contacts from './src/Contact';
-import Store from './src/Stores';
-import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import ProfileContact from './src/ProfileContact'
-import Favorites from './src/Favorites'
+import ProfileContact from './src/ProfileContact';
+import Favorites from './src/Favorites';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { View } from 'react-native';
-import { Text } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
 const App = () => {
     return (
-        <Provider store={Store}>
-            <NavigationContainer>
-                <TabNavigator/>
-            </NavigationContainer>
-        </Provider>
+        <NavigationContainer>
+            <TabNavigator />
+        </NavigationContainer>
     );
 };
 export default App;
@@ -29,16 +24,14 @@ function ContactsScreens() {
         <Stack.Navigator>
             <Stack.Screen name='Contacts' component={Contacts} />
 
-            { <Stack.Screen
+            <Stack.Screen
                 name='ProfileContact'
                 component={ProfileContact}
                 options={{ title: "Profile contact" }}
-
-            /> }
+            />
         </Stack.Navigator>
-
     );
-};
+}
 
 function FavoriteScreens() {
     return (
@@ -55,19 +48,17 @@ function FavoriteScreens() {
                 name='ProfileContact'
                 component={ProfileContact}
                 options={{ title: "Profile contact" }}
-
             />
         </Stack.Navigator>
-
     );
-};
+}
 
 const Tab = createMaterialBottomTabNavigator();
 
 const TabNavigator = () => {
     return (
         <Tab.Navigator
-            initialRouteName='ContactsScreens'
+            initialRouteName='Contacts'
             barStyle={{ backgroundColor: "blue" }}
             labeled={false}
         >
@@ -82,8 +73,6 @@ const TabNavigator = () => {
                     tabBarIcon: 'star-check',
                 }}
             />
-
         </Tab.Navigator >
-
     );
 };

@@ -1,13 +1,22 @@
 import 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
 import ContactThumbnail from './ContactThum';
+import { loadContacts } from './contactUtils'; // Assuming contactUtils is where you define loadContacts
 
 const keyExtractor = ({ phone }) => phone;
 
 const Favorites = ({ navigation }) => {
-    const { contacts } = useSelector((state) => state);
+    const [contacts, setContacts] = useState([]);
+
+    useEffect(() => {
+        const loadFavoriteContacts = async () => {
+            const loadedContacts = await loadContacts();
+            setContacts(loadedContacts);
+        };
+        loadFavoriteContacts();
+    }, []);
+
     const renderFavoriteThumbnail = ({ item }) => {
         const { avatar } = item;
         return (
@@ -17,7 +26,9 @@ const Favorites = ({ navigation }) => {
             />
         );
     };
+
     const favorites = contacts.filter((contact) => contact.favorite);
+
     return (
         <View style={styles.container}>
             <FlatList
@@ -30,14 +41,16 @@ const Favorites = ({ navigation }) => {
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "while",
+        backgroundColor: "white",
         justifyContent: 'center',
         flex: 1,
     },
     list: {
         alignItems: 'center',
     },
-})
+});
+
 export default Favorites;

@@ -1,12 +1,11 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
 import { v4 } from 'uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import styles from './styles';
 export const mapContacts = (contact) => {
     const { name, picture, phone, cell, email } = contact;
     return {
         id: v4(),
-        name: name.first + '' + name.last,
+        name: name.first + ' ' + name.last,
         avatar: picture.large,
         phone,
         cell,
@@ -14,21 +13,21 @@ export const mapContacts = (contact) => {
         favorite: Math.random() < 0.1 ? true : false,
     };
 };
-const contactsSlice = createSlice({
-    name: 'contacts',
-    initialState: {
-        contacts: [],
-    },
 
-    reducers: {
-        fetchContactsSuccess: (state, action) => {
-            state.contacts = action.payload;
-        },
-    },
-});
-export const { fetchContactsSuccess } = contactsSlice.actions;
-const Store = configureStore({
-    reducer: contactsSlice.reducer,
-});
+export const fetchContactsSuccess = (contacts) => {
+    return AsyncStorage.setItem('contacts', JSON.stringify(contacts));
+};
 
-export default Store;
+export const loadContacts = async () => {
+    try {
+        const contactsJSON = await AsyncStorage.getItem('contacts');
+        if (contactsJSON !== null) {
+            return JSON.parse(contactsJSON);
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.error('Error loading contacts:', error);
+        return [];
+    }
+};

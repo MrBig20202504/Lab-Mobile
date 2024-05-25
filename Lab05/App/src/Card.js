@@ -3,7 +3,7 @@ import { FlatList, Image, SafeAreaView, Button, Text, View, TextInput, StyleShee
 import { Card, Title, Paragraph } from 'react-native-paper';
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
-const ProducListWithCard = () => {
+const SearchProduct = () => {
     const [data, setData] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [filePath, setPath] = useState('https://dummyjson.com/products');
@@ -74,7 +74,7 @@ const ProducListWithCard = () => {
     );
 };
 
-export default ProducListWithCard;
+export default SearchProduct;
 
 const styles = StyleSheet.create({
     cardContent: {
