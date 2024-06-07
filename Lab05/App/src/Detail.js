@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
+import { View, Text, Alert, StyleSheet } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -49,6 +49,24 @@ const DetailScreen = () => {
         }
     };
 
+    const confirmDelete = () => {
+        Alert.alert(
+            "Confirm Delete",
+            "Are you sure you want to delete this item?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: handleDelete
+                }
+            ]
+        );
+    };
+
     return (
         <MenuProvider style={{ flex: 1 }}>
             <View style={styles.container}>
@@ -60,7 +78,7 @@ const DetailScreen = () => {
                         <MenuOption onSelect={() => navigation.navigate('Update', { id: itemID })}>
                             <Text style={styles.text}>Update</Text>
                         </MenuOption>
-                        <MenuOption onSelect={handleDelete}>
+                        <MenuOption onSelect={confirmDelete}>
                             <Text style={styles.text}>Delete</Text>
                         </MenuOption>
                     </MenuOptions>
