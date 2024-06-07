@@ -1,50 +1,59 @@
-import { View, Text, TextInput, TouchableOpacity, ImageBackground, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState, useEffect } from 'react';
-const LoginScreen = () => {
-    const [data, setData] = useState({})
-    const [password, setPassword] = useState('')
-    const [phone, setPhone] = useState('')
-    const [token, setToken] = useState('')
-    const filePath = 'https://kami-backend-5rs0.onrender.com/auth';
+import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+const LoginScreen = () => {
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+    const navigation = useNavigation();
+    const [token, setToken] = useState('');
     const storeData = async (token) => {
         try {
-            await AsyncStorage.setItem(1, token);
+            await AsyncStorage.setItem('token', token);
+            console.log(await AsyncStorage.getItem('token'));
         } catch (e) {
+            console.error('Error storing token', e);
         }
     };
-
     const login = async () => {
+        const filePath = 'https://kami-backend-5rs0.onrender.com/auth';
+        setPassword('123');
+        setPhone('0373007856');
 
+        
+        
         const postData = {
-            phone: '0373007856',
-            password: '123',
+            phone: phone,
+            password: password,
         };
-        await fetch(filePath, {
-            method: "POST",
-            body: JSON.stringify(postData),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+
+        try {
+            const response = await fetch(filePath, {
+                method: "POST",
+                body: JSON.stringify(postData),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
                 }
-                return response.json();
-            })
-            .then((d) => {
-                setToken(d.token);
-                storeData
-                console.log(token);
-            })
-            .catch((error) => {
-                console.error('Error fetching data', error);
             });
 
-    };
+            if (!response.ok) {
+                throw new Error('Wrong password or phone');
+            }
 
+            const data = await response.json();
+            
+            setToken(data.token);
+            storeData(token);
+            console.log(token);
+            navigation.navigate('Home');
+        } catch (error) {
+            console.error('Error fetching data', error);
+            alert('Invalid phone or password. Please try again.');
+        }
+
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -55,14 +64,16 @@ const LoginScreen = () => {
                     color='black'
                     placeholder="Phone"
                     placeholderTextColor={'black'}
-                    onChange={setPhone}
+                    onChangeText={text => setPhone(text)}
+                    value={phone}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
                     color='black'
                     placeholderTextColor={'black'}
-                    onChange={setPassword}
+                    onChangeText={text => setPassword(text)}
+                    value={password}
                     secureTextEntry
                 />
                 <TouchableOpacity
@@ -75,9 +86,6 @@ const LoginScreen = () => {
         </SafeAreaView>
     );
 };
-
-export default LoginScreen;
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -116,3 +124,5 @@ const styles = StyleSheet.create({
         color: '#FFF',
     },
 });
+
+export default LoginScreen;

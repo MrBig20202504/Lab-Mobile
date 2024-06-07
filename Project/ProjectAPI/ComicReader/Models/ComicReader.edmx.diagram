@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="941b619ffee2498ea86cf2db8194e70b" Name="Diagram1">
+        <EntityTypeShape EntityType="ComicReaderModel.Author" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ComicReaderModel.Chapter" Width="1.5" PointX="5.25" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ComicReaderModel.Comic" Width="1.5" PointX="3" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ComicReaderModel.Comment" Width="1.5" PointX="8.25" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ComicReaderModel.Favorite" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ComicReaderModel.Genre" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ComicReaderModel.Page" Width="1.5" PointX="7.5" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ComicReaderModel.User" Width="1.5" PointX="6" PointY="8.125" IsExpanded="true" />
+        <AssociationConnector Association="ComicReaderModel.FK__Comics__author_i__412EB0B6" ManuallyRouted="false" />
+        <AssociationConnector Association="ComicReaderModel.FK__Chapters__comic___45F365D3" ManuallyRouted="false" />
+        <AssociationConnector Association="ComicReaderModel.FK__Pages__chapter_i__48CFD27E" ManuallyRouted="false" />
+        <AssociationConnector Association="ComicReaderModel.FK__Comics__genre_id__4222D4EF" ManuallyRouted="false" />
+        <AssociationConnector Association="ComicReaderModel.FK__Comments__comic___4CA06362" ManuallyRouted="false" />
+        <AssociationConnector Association="ComicReaderModel.FK__Favorites__comic__52593CB8" ManuallyRouted="false" />
+        <AssociationConnector Association="ComicReaderModel.FK__Comments__user_i__4D94879B" ManuallyRouted="false" />
+        <AssociationConnector Association="ComicReaderModel.FK__Favorites__user___5165187F" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

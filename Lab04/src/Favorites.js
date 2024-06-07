@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
 import ContactThumbnail from './ContactThum';
-import { loadContacts } from './contactUtils'; // Assuming contactUtils is where you define loadContacts
+import { loadContacts } from './Stores';
 
 const keyExtractor = ({ phone }) => phone;
 

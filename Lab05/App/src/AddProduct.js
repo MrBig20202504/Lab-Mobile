@@ -1,157 +1,124 @@
-import React, { useEffect, useState } from "react";
-import { Button, TextInput, View, Text } from "react-native";
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const AddProduct = () => {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+const AddScreen = () => {
+    const [name, setName] = useState('');
     const [price, setPrice] = useState('');
-    const [discountPercentage, setDiscountPercentage] = useState('');
-    const [rating, setRating] = useState('');
-    const [stock, setStock] = useState('');
-    const [brand, setBrand] = useState('');
-    const [category, setCategory] = useState('');
-    const [images, setImages] = useState('');
+    const navigation = useNavigation();
+    const [token, setToken] = useState('');
 
-    const handleSubmit = () => {
-        fetch('https://dummyjson.com/products/add', {
+    const test = async () => {
+        setToken(await AsyncStorage.getItem('token'));
+        console.log(token)
+    }
+
+    const add = async () => {
+        setToken(await AsyncStorage.getItem('token'));
+        
+        fetch('https://kami-backend-5rs0.onrender.com/services', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json', 
+            },
             body: JSON.stringify({
-                title: title,
-                description: description,
-                price: price,
-                discountPercentage: discountPercentage,
-                rating: rating,
-                stock: stock,
-                brand: brand,
-                category: category,
-                images: images,
+                name: name,
+                price: price, 
             }),
         })
-            .then((res) => res.json())
-            .then(console.log);
-        Alert.alert("Add sucessfull")
-    };
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                Alert.alert("Success", "Product added successfully!");
+                console.log('Response data:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Alert.alert("Error", "Failed to add product. Please try again later.");
+            });
+    }
 
     return (
-        <View style={styles.addProductContainer}>
-
-            <View style={styles.minorAddProductContainer}>
-                <Text style={styles.addTitle}>Title</Text>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Service name*</Text>
                 <TextInput
                     style={styles.input}
-                    value={title}
-                    textAlign="left"
-                    placeholder="Please enter title"
+                    color='black'
+                    placeholder="Name"
                     placeholderTextColor={'black'}
-                    onChangeText={text => setTitle(text)}
+                    onChangeText={text => setName(text)}
+                    value={name}
                 />
-            </View>
-
-            <View style={styles.minorAddProductContainer}>
-                <Text style={styles.addTitle}>Description</Text>
+                <Text style={styles.title}>Price*</Text>
                 <TextInput
                     style={styles.input}
-                    value={description}
-                    textAlign="left"
-                    placeholder="Please enter description"
-                    placeholderTextColor={'black'}
-                    onChangeText={text => setDescription(text)}
-                />
-            </View>
-
-            <View style={styles.minorAddProductContainer}>
-                <Text style={styles.addTitle}>Price</Text>
-                <TextInput
-                    style={styles.input}
-                    value={price}
-                    textAlign="left"
-                    placeholder="Please enter price"
+                    color='black'
+                    placeholder="Price"
                     placeholderTextColor={'black'}
                     onChangeText={text => setPrice(text)}
+                    value={price}
                 />
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={add}
+                >
+                    <Text style={styles.buttonText}>Submit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={test}
+                >
+                    <Text style={styles.buttonText}>test</Text>
+                </TouchableOpacity>
             </View>
-
-            <View style={styles.minorAddProductContainer}>
-                <Text style={styles.addTitle}>DiscountPercentage</Text>
-                <TextInput
-                    style={styles.input}
-                    value={discountPercentage}
-                    textAlign="left"
-                    placeholder="Please enter discount percentage"
-                    placeholderTextColor={'black'}
-                    onChangeText={text => setDiscountPercentage(text)}
-                />
-            </View>
-
-            <View style={styles.minorAddProductContainer}>
-                <Text style={styles.addTitle}>Rating</Text>
-                <TextInput
-                    style={styles.input}
-                    value={rating}
-                    textAlign="left"
-                    placeholder="Please enter rating"
-                    placeholderTextColor={'black'}
-                    onChangeText={text => setRating(text)}
-                />
-            </View>
-
-            <View style={styles.minorAddProductContainer}>
-                <Text style={styles.addTitle}>Stock</Text>
-                <TextInput
-                    style={styles.input}
-                    value={stock}
-                    textAlign="left"
-                    placeholder="Please enter stock"
-                    placeholderTextColor={'black'}
-                    onChangeText={text => setStock(text)}
-                />
-            </View>
-
-            <View style={styles.minorAddProductContainer}>
-                <Text style={styles.addTitle}>Brand</Text>
-                <TextInput
-                    style={styles.input}
-                    value={brand}
-                    textAlign="left"
-                    placeholder="Please enter brand"
-                    placeholderTextColor={'black'}
-                    onChangeText={text => setBrand(text)}
-                />
-            </View>
-
-            <View style={styles.minorAddProductContainer}>
-                <Text style={styles.addTitle}>Category</Text>
-                <TextInput
-                    style={styles.input}
-                    value={category}
-                    textAlign="left"
-                    placeholder="Please enter category"
-                    placeholderTextColor={'black'}
-                    onChangeText={text => setCategory(text)}
-                />
-            </View>
-
-            <View style={styles.minorAddProductContainer}>
-                <Text style={styles.addTitle}>Images</Text>
-                <TextInput
-                    style={styles.input}
-                    value={images}
-                    textAlign="left"
-                    placeholder="Please enter images URL"
-                    placeholderTextColor={'black'}
-                    onChangeText={text => setImages(text)}
-                />
-            </View>
-
-            <Button
-                style={styles.Button}
-                onPress={handleSubmit}
-                title="SUBMIT"
-            >
-            </Button>
-        </View>
+        </SafeAreaView>
     );
 };
 
-export default AddProduct;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: 'white',
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#D61553',
+        marginBottom: 0,
+        marginTop: 10,
+    },
+    input: {
+        borderColor: 'black',
+        borderWidth: 1,
+        width: '100%',
+        marginTop: 20,
+        marginLeft: 0,
+        borderRadius: 10,
+    },
+    button: {
+        backgroundColor: '#D61553',
+        borderRadius: 20,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 12,
+        marginTop: 10,
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#FFF',
+    },
+});
+
+export default AddScreen;

@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ComicReaderModelStoreContainer" CdmEntityContainer="ComicReaderEntities">
+    <EntitySetMapping Name="Authors">
+      <EntityTypeMapping TypeName="ComicReaderModel.Author">
+        <MappingFragment StoreEntitySet="Authors">
+          <ScalarProperty Name="author_id" ColumnName="author_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="bio" ColumnName="bio" />
+          <ScalarProperty Name="profile_pic" ColumnName="profile_pic" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Chapters">
+      <EntityTypeMapping TypeName="ComicReaderModel.Chapter">
+        <MappingFragment StoreEntitySet="Chapters">
+          <ScalarProperty Name="chapter_id" ColumnName="chapter_id" />
+          <ScalarProperty Name="comic_id" ColumnName="comic_id" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="chapter_num" ColumnName="chapter_num" />
+          <ScalarProperty Name="release_date" ColumnName="release_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Comics">
+      <EntityTypeMapping TypeName="ComicReaderModel.Comic">
+        <MappingFragment StoreEntitySet="Comics">
+          <ScalarProperty Name="comic_id" ColumnName="comic_id" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="author_id" ColumnName="author_id" />
+          <ScalarProperty Name="genre_id" ColumnName="genre_id" />
+          <ScalarProperty Name="cover_image" ColumnName="cover_image" />
+          <ScalarProperty Name="publish_date" ColumnName="publish_date" />
+          <ScalarProperty Name="status" ColumnName="status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Comments">
+      <EntityTypeMapping TypeName="ComicReaderModel.Comment">
+        <MappingFragment StoreEntitySet="Comments">
+          <ScalarProperty Name="comment_id" ColumnName="comment_id" />
+          <ScalarProperty Name="comic_id" ColumnName="comic_id" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="content" ColumnName="content" />
+          <ScalarProperty Name="comment_date" ColumnName="comment_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Favorites">
+      <EntityTypeMapping TypeName="ComicReaderModel.Favorite">
+        <MappingFragment StoreEntitySet="Favorites">
+          <ScalarProperty Name="favorite_id" ColumnName="favorite_id" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="comic_id" ColumnName="comic_id" />
+          <ScalarProperty Name="favorite_date" ColumnName="favorite_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Genres">
+      <EntityTypeMapping TypeName="ComicReaderModel.Genre">
+        <MappingFragment StoreEntitySet="Genres">
+          <ScalarProperty Name="genre_id" ColumnName="genre_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Pages">
+      <EntityTypeMapping TypeName="ComicReaderModel.Page">
+        <MappingFragment StoreEntitySet="Pages">
+          <ScalarProperty Name="page_id" ColumnName="page_id" />
+          <ScalarProperty Name="chapter_id" ColumnName="chapter_id" />
+          <ScalarProperty Name="page_num" ColumnName="page_num" />
+          <ScalarProperty Name="image_url" ColumnName="image_url" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="ComicReaderModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="join_date" ColumnName="join_date" />
+          <ScalarProperty Name="profile_pic" ColumnName="profile_pic" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

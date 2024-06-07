@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import styles from "./styles";
+import { Button } from "react-native-paper";
 
 const FlatListBasics = () => {
     const [data, setData] = useState([])
-    const filePath = 'https://dummyjson.com/products';z
+    const filePath = 'http://10.40.254.30:8080/data/listening/lis_ques/get/1';
     useEffect(() => {
         fetch(filePath)
             .then((response) => {
@@ -38,11 +39,12 @@ const FlatListBasics = () => {
 
     return (
         <SafeAreaView style={styles.FlatListBasicsContainer}>
-            <FlatList
+            {/* <FlatList
                 data={data}
                 renderItem={({ item }) => <RenderItem data={item} />}
                 keyExtractor={item => item.id}
-            />
+            /> */}
+            <Button onPress={console.log(data)}>sdasds</Button>
         </SafeAreaView>
     );
 };

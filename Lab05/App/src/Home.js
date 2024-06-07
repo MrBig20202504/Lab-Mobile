@@ -1,37 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-
+import { FlatList, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import { IconButton, MD3Colors } from "react-native-paper";
 
 const HomeScreen = () => {
-    const [data, setData] = useState([])
+    const [data, setData] = useState([]);
     const filePath = 'https://kami-backend-5rs0.onrender.com/services';
+    const navigation = useNavigation();
 
     useEffect(() => {
         home();
     }, []);
 
     const home = async () => {
-        await fetch(filePath)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((d) => {
-                setData(d)
-            })
-            .catch((error) => {
-                console.error('Error fetching data', error);
-            });;
+        try {
+            const response = await fetch(filePath);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const jsonData = await response.json();
+            setData(jsonData);
+        } catch (error) {
+            console.error('Error fetching data', error);
+        }
     }
 
     const RenderItem = ({ item }) => (
-        <View style={styles.itemContainer}>
+        <TouchableOpacity
+            style={styles.itemContainer}
+            onPress={() => navigation.navigate('Detail', {
+                itemID: item._id,
+                itemName: item.name,
+                itemPrice: item.price,
+                itemCreatedBy: item.createdBy,
+                itemTime: item.createdAt,
+                itemUpdate: item.updatedAt
+            })}
+        >
             <Text style={styles.itemName}>{item.name}</Text>
             <Text style={styles.itemPrice}>{item.price}</Text>
-        </View>
+        </TouchableOpacity>
     );
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -39,12 +49,21 @@ const HomeScreen = () => {
                 <Text style={styles.headerText}>HUYỀN TRINH</Text>
             </View>
             <View style={styles.titleContainer}>
-                <Text style={styles.title}>TITLE</Text>
+                <Text style={styles.title}>KAMI MASSAGE</Text>
+            </View>
+            <View style={styles.buitonView} >
+                <IconButton
+                    icon="camera"
+                    mode="outlined"
+                    iconColor={MD3Colors.error50}
+                    size={20}
+                    onPress={() => navigation.navigate('Add Product')}
+                />
             </View>
             <FlatList
                 data={data}
                 renderItem={({ item }) => <RenderItem item={item} />}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={item => (item.id ? item.id.toString() : null)}
             />
         </SafeAreaView>
     );
@@ -72,23 +91,40 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
     },
+    button: {
+
+        backgroundColor: 'red',
+        width: 1,
+    },
+
+    buitonView: {
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginHorizontal: 10,
+        marginLeft: 310,
+    },
     title: {
         color: '#D61553',
-        fontSize: 50,
+        fontSize: 40,
         fontWeight: 'bold',
     },
     itemContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        marginHorizontal: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
     },
     itemName: {
+        flex: 1,
+        color: 'black',
         fontSize: 18,
         fontWeight: 'bold',
     },
     itemPrice: {
+        color: 'black',
         fontSize: 16,
-        color: '#888',
     },
 });
