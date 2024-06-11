@@ -17,7 +17,6 @@ const App = () => {
                 <Stack.Screen name="Detail" component={DetailScreen} />
                 <Stack.Screen name="Add Product" component={AddScreen} />
                 <Stack.Screen name="Update" component={UpdateScreen} />
-                {/* <Stack.Screen name="Delete" component={DeleteScreen} /> */}
             </Stack.Navigator>
         </NavigationContainer>
     );
