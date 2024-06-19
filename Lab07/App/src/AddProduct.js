@@ -3,58 +3,60 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect } from 'react';
+
 const AddScreen = () => {
     const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
-    const navigation = useNavigation();
+    const [price, setPrice] = useState('');
     const [token, setToken] = useState('');
+    const navigation = useNavigation();
 
-    useEffect(() => {
-        const fetchToken = async () => {
+    const test = async () => {
+        try {
             const storedToken = await AsyncStorage.getItem('token');
             if (storedToken) {
                 setToken(storedToken);
+                console.log('Token:', storedToken);
+            } else {
+                console.log('Token not found');
             }
-        };
-        fetchToken();
-    }, []);
-
-    const test = async () => {
-        console.log(token)
+        } catch (error) {
+            console.error('Error fetching token:', error);
+        }
     };
 
     const add = async () => {
-        setToken(await AsyncStorage.getItem('token'));
+        try {
+            const storedToken = await AsyncStorage.getItem('token');
+            if (!storedToken) {
+                throw new Error('Token not found. Please login again.');
+            }
 
-        fetch('https://kami-backend-5rs0.onrender.com/customers', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name: name,
-                phone: phone,
-            }),
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Network response was not ok');
-                }
-            })
-            .then(data => {
-                Alert.alert("Success", "Customer added successfully!");
-                console.log('Response data:', data);
-                navigation.goBack();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Alert.alert("Error", "Failed to add customer. Please try again later.");
+            const response = await fetch('https://kami-backend-5rs0.onrender.com/services', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + storedToken,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    price: price,
+                }),
             });
-    }
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            Alert.alert("Success", "Product added successfully!");
+            console.log('Response data:', data);
+
+            navigation.goBack();
+        } catch (error) {
+            console.error('Error:', error);
+            Alert.alert("Error", "Failed to add product. Please try again later.");
+        }
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -68,14 +70,14 @@ const AddScreen = () => {
                     onChangeText={text => setName(text)}
                     value={name}
                 />
-                <Text style={styles.title}>Phone*</Text>
+                <Text style={styles.title}>Price*</Text>
                 <TextInput
                     style={styles.input}
                     color='black'
-                    placeholder="Phone"
+                    placeholder="Price"
                     placeholderTextColor={'black'}
-                    onChangeText={text => setPhone(text)}
-                    value={phone}
+                    onChangeText={text => setPrice(text)}
+                    value={price}
                 />
                 <TouchableOpacity
                     style={styles.button}
@@ -87,7 +89,7 @@ const AddScreen = () => {
                     style={styles.button}
                     onPress={test}
                 >
-                    <Text style={styles.buttonText}>Test</Text>
+                    <Text style={styles.buttonText}>Test AsyncStorage</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -114,6 +116,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 0,
         borderRadius: 10,
+        paddingHorizontal: 10,
     },
     button: {
         backgroundColor: '#A349A4',

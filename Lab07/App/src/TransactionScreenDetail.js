@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, Text, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TransactionDetailScreen = ({ route }) => {
     const { data } = route.params;
-    const [token, setToken] = useState('');
     const totalCost = data.services.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+    const [token, setToken] = useState('');
 
     useEffect(() => {
         const fetchToken = async () => {

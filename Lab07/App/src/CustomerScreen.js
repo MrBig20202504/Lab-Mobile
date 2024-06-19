@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { IconButton, MD3Colors} from "react-native-paper";
+import { IconButton, MD3Colors } from "react-native-paper";
 
 const CustomerScreen = () => {
     const [data, setData] = useState([]);
@@ -15,7 +15,6 @@ const CustomerScreen = () => {
 
     const home = async () => {
         try {
-            
             const response = await fetch(filePath);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -36,8 +35,9 @@ const CustomerScreen = () => {
     }
 
     const RenderItem = ({ item }) => (
-        <View
+        <TouchableOpacity
             style={styles.smallContainer}
+            onPress={() => navigation.navigate('CustomerDetailScreen', { ID: item._id })}
         >
             <View style={{ flex: 2, flexDirection: 'row', alignItems: 'center' }}>
                 <View style={{ flex: 1 }}>
@@ -63,19 +63,18 @@ const CustomerScreen = () => {
                 </View>
 
             </View>
-        </View>
+        </TouchableOpacity>
     );
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.buitonView} >
-                <IconButton
-                    icon="plus"
-                    mode="outlined"
-                    iconColor={MD3Colors.error50}
-                    size={20}
-                    onPress={() => navigation.navigate('AddCustomerScreen')}
-                />
-            </View>
+            <IconButton
+                icon="plus"
+                mode="outlined"
+                iconColor={MD3Colors.error50}
+                size={20}
+                style={styles.addButton}
+                onPress={() => navigation.navigate('AddCustomerScreen')}
+            />
             <FlatList
                 data={data}
                 renderItem={({ item }) => <RenderItem item={item} />}
@@ -99,11 +98,15 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
     },
-    buitonView: {
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-        marginHorizontal: 10,
-        marginLeft: 310,
+    addButton: {
+        position: 'absolute',
+        borderRadius: 25,
+        right: 20,
+        bottom: 10,
+        zIndex: 1,
+        height: 50,
+        width: 50,
+        backgroundColor: 'white'
     },
     title: {
         fontSize: 20,

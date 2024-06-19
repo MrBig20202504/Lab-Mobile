@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#D61553',
+        color: '#A349A4',
         marginBottom: 0,
         marginTop: 10,
     },
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     button: {
-        backgroundColor: '#D61553',
+        backgroundColor: '#A349A4',
         borderRadius: 20,
         width: '100%',
         justifyContent: 'center',

@@ -12,10 +12,7 @@ const AddScreen = () => {
 
     useEffect(() => {
         const fetchToken = async () => {
-            const storedToken = await AsyncStorage.getItem('token');
-            if (storedToken) {
-                setToken(storedToken);
-            }
+            setToken(await AsyncStorage.getItem('token'));
         };
         fetchToken();
     }, []);
@@ -25,7 +22,7 @@ const AddScreen = () => {
     };
 
     const add = async () => {
-        setToken(await AsyncStorage.getItem('token'));
+        //setToken(await AsyncStorage.getItem('token'));
 
         fetch('https://kami-backend-5rs0.onrender.com/customers', {
             method: 'POST',

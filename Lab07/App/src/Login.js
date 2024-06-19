@@ -8,6 +8,7 @@ const LoginScreen = () => {
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
+    const [token, setToken] = useState('');
     
     const storeData = async (token) => {
         try {
@@ -28,8 +29,8 @@ const LoginScreen = () => {
         checkStoredToken();
     }, [navigation]);
 
-    const test = async () => {
-        console.log(await AsyncStorage.getItem('token'));
+    const test = () => {
+        console.log(token);
     };
 
     const login = async () => {
@@ -54,6 +55,7 @@ const LoginScreen = () => {
             }
 
             const data = await response.json();
+            setToken(data.token);
             await storeData(data.token);
             navigation.replace('MainTabs');
         } catch (error) {

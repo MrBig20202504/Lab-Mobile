@@ -1,68 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect } from 'react';
-const AddScreen = () => {
+
+const UpdateCustomerScreen = () => {
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
-    const navigation = useNavigation();
+    const route = useRoute();
+    const { id, filePath } = route.params;
     const [token, setToken] = useState('');
+    const navigation = useNavigation();
 
     useEffect(() => {
         const fetchToken = async () => {
-            const storedToken = await AsyncStorage.getItem('token');
-            if (storedToken) {
-                setToken(storedToken);
+            try {
+                const storedToken = await AsyncStorage.getItem('token');
+                if (storedToken) {
+                    setToken(storedToken);
+                } else {
+                    console.log('Token not found');
+                }
+            } catch (error) {
+                console.error('Error fetching token', error);
             }
         };
+
         fetchToken();
     }, []);
 
-    const test = async () => {
-        console.log(token)
+    const update = async () => {
+        try {
+            const response = await fetch(filePath, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    phone: phone,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            Alert.alert("Success", "Product updated successfully!");
+            console.log('Response data:', data);
+            navigation.goBack();
+        } catch (error) {
+            console.error('Error:', error);
+            Alert.alert("Error", "Failed to update product. Please try again later.");
+        }
     };
 
-    const add = async () => {
-        setToken(await AsyncStorage.getItem('token'));
-
-        fetch('https://kami-backend-5rs0.onrender.com/customers', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name: name,
-                phone: phone,
-            }),
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Network response was not ok');
-                }
-            })
-            .then(data => {
-                Alert.alert("Success", "Customer added successfully!");
-                console.log('Response data:', data);
-                navigation.goBack();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Alert.alert("Error", "Failed to add customer. Please try again later.");
-            });
-    }
+    const test = async () => {
+        console.log(token);
+        console.log(filePath);
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <Text style={styles.title}>Service name*</Text>
+                <Text style={styles.title}>Customer name*</Text>
                 <TextInput
                     style={styles.input}
-                    color='black'
                     placeholder="Name"
                     placeholderTextColor={'black'}
                     onChangeText={text => setName(text)}
@@ -71,18 +76,19 @@ const AddScreen = () => {
                 <Text style={styles.title}>Phone*</Text>
                 <TextInput
                     style={styles.input}
-                    color='black'
                     placeholder="Phone"
                     placeholderTextColor={'black'}
                     onChangeText={text => setPhone(text)}
                     value={phone}
+                    keyboardType="numeric"
                 />
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={add}
+                    onPress={update}
                 >
                     <Text style={styles.buttonText}>Submit</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                     style={styles.button}
                     onPress={test}
@@ -104,16 +110,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: '#A349A4',
-        marginBottom: 0,
-        marginTop: 10,
+        marginBottom: 10,
+        marginTop: 20, // Increased top margin for better separation
     },
     input: {
         borderColor: 'black',
         borderWidth: 1,
-        width: '100%',
-        marginTop: 20,
-        marginLeft: 0,
         borderRadius: 10,
+        paddingHorizontal: 10,
+        marginTop: 10,
     },
     button: {
         backgroundColor: '#A349A4',
@@ -122,7 +127,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 12,
-        marginTop: 10,
+        marginTop: 20,
     },
     buttonText: {
         fontSize: 16,
@@ -131,4 +136,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AddScreen;
+export default UpdateCustomerScreen;

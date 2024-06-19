@@ -1,41 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect } from 'react';
-const AddScreen = () => {
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
-    const navigation = useNavigation();
-    const [token, setToken] = useState('');
 
-    useEffect(() => {
-        const fetchToken = async () => {
-            const storedToken = await AsyncStorage.getItem('token');
-            if (storedToken) {
-                setToken(storedToken);
-            }
-        };
-        fetchToken();
-    }, []);
+const UpdateScreen = () => {
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState('');
+    const route = useRoute();
+    const { id } = route.params; 
+    const [token, setToken] = useState('');
+    const navigation = useNavigation();
 
     const test = async () => {
-        console.log(token)
-    };
-
-    const add = async () => {
         setToken(await AsyncStorage.getItem('token'));
+        console.log(token)
+        console.log(id)
+    }
 
-        fetch('https://kami-backend-5rs0.onrender.com/customers', {
-            method: 'POST',
+    const update = async () => {
+        setToken(await AsyncStorage.getItem('token'));
+        
+        fetch('https://kami-backend-5rs0.onrender.com/services/'+id, {
+            method: 'PUT',
             headers: {
                 'Authorization': 'Bearer ' + token,
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', 
             },
             body: JSON.stringify({
                 name: name,
-                phone: phone,
+                price: price, 
             }),
         })
             .then(response => {
@@ -46,13 +40,13 @@ const AddScreen = () => {
                 }
             })
             .then(data => {
-                Alert.alert("Success", "Customer added successfully!");
+                Alert.alert("Success", "Product update successfully!");
                 console.log('Response data:', data);
-                navigation.goBack();
+                navigation.goBack;
             })
             .catch(error => {
                 console.error('Error:', error);
-                Alert.alert("Error", "Failed to add customer. Please try again later.");
+                Alert.alert("Error", "Failed to update product. Please try again later.");
             });
     }
 
@@ -68,26 +62,27 @@ const AddScreen = () => {
                     onChangeText={text => setName(text)}
                     value={name}
                 />
-                <Text style={styles.title}>Phone*</Text>
+                <Text style={styles.title}>Price*</Text>
                 <TextInput
                     style={styles.input}
                     color='black'
-                    placeholder="Phone"
+                    placeholder="Price"
                     placeholderTextColor={'black'}
-                    onChangeText={text => setPhone(text)}
-                    value={phone}
+                    onChangeText={text => setPrice(text)}
+                    value={price}
                 />
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={add}
+                    onPress={update}
                 >
                     <Text style={styles.buttonText}>Submit</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                     style={styles.button}
                     onPress={test}
                 >
-                    <Text style={styles.buttonText}>Test</Text>
+                    <Text style={styles.buttonText}>test</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -103,7 +98,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#A349A4',
+        color: '#D61553',
         marginBottom: 0,
         marginTop: 10,
     },
@@ -114,15 +109,16 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 0,
         borderRadius: 10,
+        paddingHorizontal: 10, // Added padding for better text input experience
     },
     button: {
-        backgroundColor: '#A349A4',
+        backgroundColor: '#D61553',
         borderRadius: 20,
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 12,
-        marginTop: 10,
+        marginTop: 20, // Increased margin for better separation from input fields
     },
     buttonText: {
         fontSize: 16,
@@ -131,4 +127,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AddScreen;
+export default UpdateScreen;
