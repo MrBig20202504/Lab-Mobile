@@ -1,88 +1,120 @@
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
-import React, { useState } from 'react';
-import type { PropsWithChildren } from 'react';
-import {
-  Alert,
-  Button,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React from 'react';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Hometab from './TabPages/Hometab';
+import SearchTab from './TabPages/SearchTab';
+import BookmarkTab from './TabPages/BookmarkTab';
+import LogoutScreen from './TabPages/LoginTab';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import LoginScreen from './TabPages/LoginTab';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Tab = createBottomTabNavigator();
 
+const App = () => {
 
-function App(): React.JSX.Element {
-  const [userToken,setUserToken] = useState('');
-  GoogleSignin.configure({
-    webClientId: '391916933936-1vv15v4bmhvi7svsenovof7qbpf8t4gh.apps.googleusercontent.com',
+  const styles = StyleSheet.create({
+    headerText: {
+      fontSize: 28,
+      color: 'white',
+      fontWeight: "bold",
+    },
+    headerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      backgroundColor: '#171717',
+      paddingVertical: 10,
+    }
   });
 
-  async function onGoogleButtonPress() {
-    // Check if your device supports Google Play
-    try {
-      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-    } catch {
-      Alert.alert("Error login google");
-    }
-    // Get the users ID token
-  
-    const { idToken } = await GoogleSignin.signIn();
-    
-    // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    // Sign-in the user with the credential
-    console.log((await auth().signInWithCredential(googleCredential)).user);
-    setUserToken((await GoogleSignin.getTokens()).accessToken);
-    return auth().signInWithCredential(googleCredential);
-  };
-
-  async function fetchData()
-  {
-   
-   console.log(userToken);
-     await fetch('https://aao.eiu.edu.vn/api/auth/login', {
-        method: 'post',
-        body: new URLSearchParams({ username: 'user@gw', password: userToken, grant_type: 'password' }).toString(),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      })
-        .then((response) => console.log(response))
-        .catch((err) => console.log("Error"));
-   
-  };
-  const handleSignOut = async () => {
-    try {
-      // Sign out the user
-      await auth().signOut();
-      // Set the user state to null
-//      setUser(null);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  
+  function CustomHeader() {
+    return (
+      <View style={styles.headerContainer}>
+        <View style={{
+          width: 40,
+          height: 40,
+          marginLeft: 15,
+          borderRadius: 20,
+          overflow: 'hidden',
+        }}>
+          <Image
+            source={require('./Image/OIG4.jpg')}
+            style={{
+              width: '100%',
+              height: '100%',
+              resizeMode: 'cover',
+            }}
+          />
+        </View>
+        <Text style={styles.headerText}>ComicReader</Text>
+        <View>
+          <FontAwesome5 name="user-circle" size={35} color="white" style={{ marginRight: 15 }} />
+        </View>
+      </View>
+    );
+  }
   return (
-    <SafeAreaView>
-      <Button title='Login' onPress={onGoogleButtonPress}></Button>
-      <Button title='SignOut' onPress={handleSignOut}></Button>
-      <Button title='Load data' onPress={fetchData}></Button>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: '#171717',
+          },
+          tabBarLabelStyle: {
+            color: 'white',
+          },
+          tabBarActiveTintColor: 'white',
+          tabBarInactiveTintColor: 'gray',
+          header: () => <CustomHeader />,
+        }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={Hometab}
+          options={{
+            title: 'Home',
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5 name="home" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Search"
+          component={SearchTab}
+          options={{
+            tabBarLabel: 'Search',
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5 name="search" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Bookmark"
+          component={BookmarkTab}
+          options={{
+            tabBarLabel: 'Bookmark',
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5 name="book" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Account"
+          component={LoginScreen}
+          options={{
+            headerShown: true,
+            tabBarLabel: 'Account',
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5 name="user" size={size} color={color} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
-}
-
+};
 
 export default App;

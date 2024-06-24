@@ -1,119 +1,128 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Description;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ComicReader.Data;
 using ComicReader.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ComicReader.Controllers
 {
-    public class ComicsController : ApiController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ComicsController : ControllerBase
     {
-        private ComicReaderEntities db = new ComicReaderEntities();
+        private readonly LibraryManage _context;
+
+        public ComicsController(LibraryManage context)
+        {
+            _context = context;
+        }
 
         // GET: api/Comics
-        public IQueryable<Comic> GetComics()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<object>>> GetComics()
         {
-            return db.Comics;
+            var comics = await _context.Comics
+                .Include(c => c.Author)
+                .Include(c => c.Genre)
+                .Include(c => c.Chapters)
+                    .ThenInclude(ch => ch.Pages)
+                .Select(c => new
+                {
+                    ComicId = c.ComicId,
+                    Title = c.Title,
+                    Description = c.Description,
+                    CoverImage = c.CoverImage,
+                    PublishDate = c.PublishDate,
+                    Status = c.Status,
+                    Author = new {c.Author.Name }, // Only include AuthorId and Name
+                    Genre = new {c.Genre.Name }, // Only include GenreId and Name
+                    Chapters = c.Chapters.Select(ch => new
+                    {
+                        ChapterId = ch.ChapterId,
+                        Title = ch.Title,
+                        Pages = ch.Pages.Select(p => new
+                        {
+                            PageId = p.PageId,
+                            ImageUrl = p.ImageUrl
+                        }).ToList()
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            return comics;
         }
 
         // GET: api/Comics/5
-        [ResponseType(typeof(Comic))]
-        public async Task<IHttpActionResult> GetComic(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<object>> GetComic(int id)
         {
-            Comic comic = await db.Comics.FindAsync(id);
+            var comic = await _context.Comics
+                .Include(c => c.Author)
+                .Include(c => c.Genre)
+                .Include(c => c.Chapters)
+                    .ThenInclude(ch => ch.Pages)
+                .Select(c => new
+                {
+                    ComicId = c.ComicId,
+                    Title = c.Title,
+                    Description = c.Description,
+                    CoverImage = c.CoverImage,
+                    PublishDate = c.PublishDate,
+                    Status = c.Status,
+                    Author = new { c.Author.Name }, // Only include AuthorId and Name
+                    Genre = new { c.Genre.Name }, // Only include GenreId and Name
+                    Chapters = c.Chapters.Select(ch => new
+                    {
+                        ChapterId = ch.ChapterId,
+                        Title = ch.Title,
+                        Pages = ch.Pages.Select(p => new
+                        {
+                            PageId = p.PageId,
+                            ImageUrl = p.ImageUrl
+                        }).ToList()
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync(c => c.ComicId == id);
+
             if (comic == null)
             {
                 return NotFound();
             }
 
-            return Ok(comic);
-        }
-
-        // PUT: api/Comics/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutComic(int id, Comic comic)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != comic.comic_id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(comic).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ComicExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            return comic;
         }
 
         // POST: api/Comics
-        [ResponseType(typeof(Comic))]
-        public async Task<IHttpActionResult> PostComic(Comic comic)
+        [HttpPost]
+        public async Task<ActionResult<Comic>> PostComic(Comic comic)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            _context.Comics.Add(comic);
+            await _context.SaveChangesAsync();
 
-            db.Comics.Add(comic);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = comic.comic_id }, comic);
+            return CreatedAtAction("GetComic", new { id = comic.ComicId }, comic);
         }
 
         // DELETE: api/Comics/5
-        [ResponseType(typeof(Comic))]
-        public async Task<IHttpActionResult> DeleteComic(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteComic(int id)
         {
-            Comic comic = await db.Comics.FindAsync(id);
+            var comic = await _context.Comics.FindAsync(id);
             if (comic == null)
             {
                 return NotFound();
             }
 
-            db.Comics.Remove(comic);
-            await db.SaveChangesAsync();
+            _context.Comics.Remove(comic);
+            await _context.SaveChangesAsync();
 
-            return Ok(comic);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            return NoContent();
         }
 
         private bool ComicExists(int id)
         {
-            return db.Comics.Count(e => e.comic_id == id) > 0;
+            return _context.Comics.Any(e => e.ComicId == id);
         }
     }
 }

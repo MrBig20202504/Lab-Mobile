@@ -51,7 +51,7 @@ CREATE TABLE Chapters (
     title VARCHAR(100),
     chapter_num INT NOT NULL,
     release_date DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (comic_id) REFERENCES Comics(comic_id)
+    FOREIGN KEY (comic_id) REFERENCES Comics(comicid)
 );
 GO
 
@@ -77,6 +77,7 @@ CREATE TABLE Comments (
 );
 GO
 
+
 -- Create the Favorites table
 CREATE TABLE Favorites (
     favorite_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -88,6 +89,9 @@ CREATE TABLE Favorites (
 );
 GO
 
+alter table chapters add FOREIGN KEY (comic_id) REFERENCES Comics(comicid);
+
+DELETE FROM chapters WHERE comic_id = 3;
 -- Insert data into Authors table
 --INSERT INTO Authors (name, bio) VALUES
 --('Shigeru Sagasaki', 'none');
